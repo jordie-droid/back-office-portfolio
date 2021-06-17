@@ -9,6 +9,8 @@ const server = express();
 server.use(express.json());
 server.use(cors());
 
+const BASEURI = "/api/projects";
+
 const connection = mysql.createConnection({
   host: process.env.DB_HOST || "sql4.freemysqlhosting.net",
   user: process.env.DB_USER || "sql4419467",
@@ -16,14 +18,39 @@ const connection = mysql.createConnection({
   database: process.env.DATABASE || "sql4419467",
 });
 
+const checkProjectExistence = (request, response, next) => {
+  const id = +request.params.id;
+  if (isNaN(id)) {
+    return response.status(404).json({ error: "Projects not found" });
+  }
+  connection.query("SELECT * FROM projects WHERE ID=" + id, (error, result) => {
+    if (error) {
+      return response.status(500).json({ error: "Internal error" });
+    }
+    if (result.length < 0) {
+      return response.status(404).json({ error: "Projects not found" });
+    }
+    request.project = result;
+    next();
+  });
+};
+
+const validateBody = (req, res, next) => {
+  const values = [req.body.name, req.body.description, req.body.image];
+  if (values.some((value) => value.length === 0)) {
+    return res.status(422).json({ message: "Please fill correctly fields" });
+  }
+  next();
+};
+
 connection.connect((error) => {
   if (error) {
-    console.error("connection failure : ", error.stack);
+    return console.error("connection failure : ", error.stack);
   }
   console.log("successful connecting to the database");
 });
 
-server.get("/", (request, response) => {
+server.get(`${BASEURI}/`, (request, response) => {
   connection.query("SELECT * FROM projects", (error, result) => {
     if (error) {
       response.status(500).json({ error: "Internal erro" });
@@ -31,6 +58,12 @@ server.get("/", (request, response) => {
     response.status(200).json({ result });
   });
 });
+
+server.get(`${BASEURI}/:id`, checkProjectExistence, ({ project }, response) => {
+  response.status(200).json(project);
+});
+
+server.post(`${BASEURI}/:id`, [checkProjectExistence, validateBody]);
 
 const PORT = process.env.PORT || 4000;
 

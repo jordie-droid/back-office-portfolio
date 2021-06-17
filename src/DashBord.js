@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import logo from "./images/logo.svg";
 
 const DashBord = () => {
-  const databaseURL = "http://localhost:8000/api/projects/";
+  const databaseURL = "http://localhost:4000/api/projects/";
 
   const [projectsArray, setProjectsArray] = useState([]);
 
@@ -10,23 +10,54 @@ const DashBord = () => {
     (async function fetchProjects() {
       const response = await fetch(databaseURL);
       const data = await response.json();
-      await setProjectsArray(data);
+      await setProjectsArray(data.result);
     })();
   }, []);
 
   return (
     <div className="dash-bord__main-container">
       <div className="dash-bord__header">
-        <h1>Liste de projets</h1>
+        <h1>
+          Liste de projets{" "}
+          <span>{projectsArray.length > 0 && projectsArray.length}</span>
+        </h1>
+        {console.log(projectsArray)}
       </div>
       <div className="dash-bord__grid">
         {projectsArray.length > 0 &&
-          projectsArray.map(({ id, name, image }) => (
-            <div key={id} className="dash-bord__techno-stat">
-              <div className="image-container">
-                <img src={image} alt={name}></img>
+          projectsArray.map(({ ID, NAME, IMAGE }) => (
+            <div key={ID} className="flex-column universal-shadow">
+              <div className="dash-bord__techno">
+                <div className="image-container">
+                  <img src={IMAGE} alt={NAME}></img>
+                </div>
+                <h3>{NAME}</h3>
               </div>
-              <h3>{name}</h3>
+
+              <div className="techo__controls">
+                <p>
+                  <button id="update">
+                    <i
+                      style={{
+                        color: "#ffffff",
+                        fontSize: "1.3rem",
+                      }}
+                      className="edit icon"
+                    ></i>
+                  </button>
+                </p>
+                <p>
+                  <button id="delete">
+                    <i
+                      style={{
+                        color: "#ffffff",
+                        fontSize: "1.3rem",
+                      }}
+                      className="trash icon"
+                    ></i>
+                  </button>
+                </p>
+              </div>
             </div>
           ))}
       </div>

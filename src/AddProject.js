@@ -54,42 +54,9 @@ const AddProject = () => {
 
   const searchProject = () => {};
 
-  const createProject = (event) => {
+  const addProject = (event) => {
     event.preventDefault();
-    const { name, description, image } = projectFields;
-    if (
-      (name === undefined || description === undefined, image === undefined)
-    ) {
-      setMessage("Veuillez remplir touts les chanmps");
-      return setOpen(true);
-    }
-    (async function createProject() {
-      setIsWaiting(true);
-      setOpen(true);
-      let data = new FormData();
-      data.append("file", image);
-      data.append("upload_preset", "cmsporfolio_images");
-      let response = await fetch(cloudinaryUrl, {
-        method: "POST",
-        body: data,
-      });
-      data = await response.json();
-      const imageURL = data.secure_url;
-
-      response = await fetch(databaseURL, {
-        method: "POST",
-        headers: {
-          Accept: "Applicatin/json",
-          "content-type": "Application/json",
-        },
-        body: JSON.stringify({ name, description, imageURL }),
-      });
-      data = await response.json();
-      setIsWaiting(false);
-      setMessage(data.message);
-      resetProject();
-      setProjectsArray(data.results);
-    })();
+    console.log("ADD");
   };
 
   const updateProject = (id) => {
@@ -109,30 +76,19 @@ const AddProject = () => {
       <div className="project-header">
         <h1 className="header-message">Espace d'administration</h1>
       </div>
-      <form className="form">
+      <form className="form" onSubmit={addProject}>
         <h2>Enregistrer un nouveau project</h2>
         <div className="fields-container">
           <div className="left-side">
             <div className="field-group">
               <label htmlFor="name">Nom du projet</label>
               <br />
-              <input
-                id="name"
-                type="text"
-                value={projectFields.name || ""}
-                onChange={editProject}
-                required
-              />
+              <input id="name" type="text" required />
             </div>
             <div className="field-group">
               <label htmlFor="description">Description du projet</label>
               <br />
-              <textarea
-                id="description"
-                value={projectFields.description || ""}
-                onChange={editProject}
-                required
-              ></textarea>
+              <textarea id="description" required></textarea>
             </div>
           </div>
           <div className="right-side">
@@ -153,11 +109,7 @@ const AddProject = () => {
           </div>
         </div>
         <div className="button-group">
-          <button
-            className="ui primary button"
-            type="submit"
-            onClick={createProject}
-          >
+          <button className="ui primary button" type="submit">
             <i
               style={{
                 color: "#ffffff",
@@ -182,7 +134,7 @@ const AddProject = () => {
         </div>
       </form>
       <div className="table-container">
-        <table>
+        {/* <table>
           <thead>
             <tr>
               <th>ID</th>
@@ -238,7 +190,7 @@ const AddProject = () => {
               );
             })}
           </tbody>
-        </table>
+        </table> */}
       </div>
 
       <Modal
