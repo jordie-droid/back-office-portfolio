@@ -2,15 +2,20 @@ import { useEffect, useState } from "react";
 import logo from "./images/logo.svg";
 
 const DashBord = () => {
-  const databaseURL = "http://localhost:4000/api/projects/";
+  const databaseURL = "https://jp-backoffice.herokuapp.com/api/projects/";
+  // const databaseURL = "http://localhost:4000/api/projects";
 
   const [projectsArray, setProjectsArray] = useState([]);
 
   useEffect(() => {
     (async function fetchProjects() {
-      const response = await fetch(databaseURL);
-      const data = await response.json();
-      await setProjectsArray(data.result);
+      try {
+        const response = await fetch(databaseURL);
+        const data = await response.json();
+        await setProjectsArray(data.result);
+      } catch (error) {
+        console.error(error.stack);
+      }
     })();
   }, []);
 
@@ -21,7 +26,6 @@ const DashBord = () => {
           Liste de projets{" "}
           <span>{projectsArray.length > 0 && projectsArray.length}</span>
         </h1>
-        {console.log(projectsArray)}
       </div>
       <div className="dash-bord__grid">
         {projectsArray.length > 0 &&
