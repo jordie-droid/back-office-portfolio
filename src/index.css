@@ -329,63 +329,6 @@ body {
   color: #2185d0;
 }
 
-.table-container {
-  padding: 0 0 30px;
-}
-
-table {
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  width: 80%;
-  border-collapse: collapse;
-  cursor: pointer;
-  margin-bottom: 50px !important;
-}
-
-table td,
-th {
-  padding: 8px;
-}
-
-table tr:nth-child(2n) {
-  background-color: #eeeeee;
-  color: #000000;
-}
-
-table tbody tr {
-  transition: 1s;
-}
-
-table tbody tr:hover {
-  background-color: #c7c7c7;
-}
-
-table th {
-  padding-top: 12px;
-  padding-bottom: 12px;
-  text-align: center;
-  background-color: #13619c;
-  color: white;
-}
-
-table .project-image {
-  width: 200px;
-  height: 100px;
-  overflow: hidden;
-}
-
-table .project-image img {
-  width: 100%;
-  object-fit: cover;
-}
-
-table button:focus {
-  outline: none;
-  background-color: #f7b335;
-}
-
 #update {
   width: 50px;
   height: 50px;

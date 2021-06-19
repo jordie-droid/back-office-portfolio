@@ -4,8 +4,6 @@ import { Button, Modal, Loader } from "semantic-ui-react";
 import noImage from "./images/image.png";
 
 const AddProject = ({ BASEURI, CLOUDINARYURI }) => {
-  const cloudinaryUrl = CLOUDINARYURI;
-
   const [projectImage, setProjectImage] = useState("");
   const [message, setMessage] = useState("");
 
@@ -24,7 +22,7 @@ const AddProject = ({ BASEURI, CLOUDINARYURI }) => {
     let dataForm = new FormData();
     dataForm.append("file", image);
     dataForm.append("upload_preset", "cmsporfolio_images");
-    const response = await fetch(cloudinaryUrl, {
+    const response = await fetch(CLOUDINARYURI, {
       method: "POST",
       body: dataForm,
     });
@@ -118,91 +116,29 @@ const AddProject = ({ BASEURI, CLOUDINARYURI }) => {
           </button>
         </div>
       </form>
-      <div className="table-container">
-        {/* <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Description</th>
-              <th>Image</th>
-            </tr>
-          </thead>
-          <tbody>
-            {projectsArray.map((project) => {
-              return (
-                <tr key={project.id}>
-                  <td>{project.id}</td>
-                  <td>{project.name}</td>
-                  <td>{project.description}</td>
-                  <td>
-                    <div className="project-image">
-                      <img
-                        src={project.image ? project.image : noImage}
-                        alt={project.name}
-                      ></img>
-                    </div>
-                  </td>
-                  <td>
-                    <button
-                      id="update"
-                      onClick={() => updateProject(project.id)}
-                    >
-                      <i
-                        style={{
-                          color: "#ffffff",
-                          fontSize: "1.3rem",
-                        }}
-                        className="edit icon"
-                      ></i>
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      id="delete"
-                      onClick={() => deleteProject(project.id)}
-                    >
-                      <i
-                        style={{
-                          color: "#ffffff",
-                          fontSize: "1.3rem",
-                        }}
-                        className="trash icon"
-                      ></i>
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table> */}
-      </div>
-
-      <Modal
-        centered={true}
-        open={open}
-        onClose={() => setOpen(false)}
-        onOpen={() => setOpen(true)}
-      >
-        {isWaiting ? (
-          <Loader indeterminate>Veuillez patienter svp !!!</Loader>
-        ) : (
-          <>
-            <Modal.Header>Message</Modal.Header>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <br></br>
-            <Modal.Content>
-              <Modal.Description>{message}</Modal.Description>
-            </Modal.Content>
-            <Modal.Actions>
-              <Button onClick={() => setOpen(false)}>OK</Button>
-            </Modal.Actions>
-          </>
-        )}
-      </Modal>
+      {isWaiting ? (
+        <Loader indeterminate>Veuillez patienter svp !!!</Loader>
+      ) : (
+        <Modal
+          centered={true}
+          open={open}
+          onClose={() => setOpen(false)}
+          onOpen={() => setOpen(true)}
+        >
+          <Modal.Header>Message</Modal.Header>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <br></br>
+          <Modal.Content>
+            <Modal.Description>{message}</Modal.Description>
+          </Modal.Content>
+          <Modal.Actions>
+            <Button onClick={() => setOpen(false)}>OK</Button>
+          </Modal.Actions>
+        </Modal>
+      )}
     </>
   );
 };
