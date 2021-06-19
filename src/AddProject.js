@@ -1,74 +1,66 @@
-import { useEffect, useState } from "react";
-// import "semantic-ui-css/semantic.min.css";
+import { useState } from "react";
 import "./index.css";
 import { Button, Modal, Loader } from "semantic-ui-react";
 import noImage from "./images/image.png";
 
-const AddProject = () => {
-  const databaseURL = "http://localhost:8000/api/projects/";
-  const cloudinaryUrl =
-    "https://api.cloudinary.com/v1_1/doxk0udlk/image/upload";
+const AddProject = ({ BASEURI, CLOUDINARYURI }) => {
+  const cloudinaryUrl = CLOUDINARYURI;
 
-  const [projectFields, setProjectFields] = useState({});
-
-  const [projectsArray, setProjectsArray] = useState([]);
-
-  const [message, setMessage] = useState(null);
+  const [projectImage, setProjectImage] = useState("");
+  const [message, setMessage] = useState("");
 
   const [open, setOpen] = useState(false);
   const [isWaiting, setIsWaiting] = useState(false);
 
-  const editProject = (event) => {
-    const currentFieldValue = event.target.value;
-    const currentFieldName = event.target.id;
-
-    if (currentFieldName === "image") {
-      const fileChooser = event.target;
-      setProjectFields({
-        name: projectFields.name,
-        description: projectFields.description,
-        image: fileChooser.files[0],
-      });
-    } else if (currentFieldName === "name") {
-      setProjectFields({
-        name: currentFieldValue,
-        description: projectFields.description,
-        image: projectFields.image,
-      });
-    } else {
-      setProjectFields({
-        name: projectFields.name,
-        description: currentFieldValue,
-        image: projectFields.image,
-      });
+  const loadPhoto = (event) => {
+    const choice = event.target.files;
+    if (choice && choice[0]) {
+      setProjectImage(URL.createObjectURL(choice[0]));
     }
   };
 
-  useEffect(() => {
-    (async function fetchProjects() {
-      const response = await fetch(databaseURL);
-      const data = await response.json();
-      await setProjectsArray(data);
-    })();
-  }, []);
+  const cloudinaryUploader = async (event) => {
+    const image = event.target.image.files[0];
+    let dataForm = new FormData();
+    dataForm.append("file", image);
+    dataForm.append("upload_preset", "cmsporfolio_images");
+    const response = await fetch(cloudinaryUrl, {
+      method: "POST",
+      body: dataForm,
+    });
+    const data = await response.json();
+    return data.secure_url;
+  };
 
-  const searchProject = () => {};
-
-  const addProject = (event) => {
+  const addProject = async (event) => {
     event.preventDefault();
-    console.log("ADD");
-  };
-
-  const updateProject = (id) => {
-    alert(id);
-  };
-
-  const deleteProject = (id) => {
-    alert(id);
+    setIsWaiting(true);
+    setOpen(true);
+    const { name, description } = event.target;
+    const IMAGE = await cloudinaryUploader(event);
+    const response = await fetch(BASEURI, {
+      method: "POST",
+      headers: {
+        Accept: "Applicatin/json",
+        "content-type": "Application/json",
+      },
+      body: JSON.stringify({
+        NAME: name.value,
+        DESCRIPTION: description.value,
+        IMAGE,
+      }),
+    });
+    const data = await response.json();
+    setIsWaiting(false);
+    data.message && setMessage("Project ajouté avec succès");
+    resetProject();
   };
 
   const resetProject = () => {
-    setProjectFields({});
+    setProjectImage("");
+    document.querySelector("#name").value = "";
+    document.querySelector("#description").value = "";
+    document.querySelector("#image").value = "";
   };
 
   return (
@@ -93,18 +85,11 @@ const AddProject = () => {
           </div>
           <div className="right-side">
             <div className="field-group">
-              <img
-                src={
-                  projectFields.image
-                    ? URL.createObjectURL(projectFields.image)
-                    : noImage
-                }
-                alt="project"
-              />
+              <img src={projectImage ? projectImage : noImage} alt="project" />
               <br />
               <label htmlFor="image">Télécharger l'mage</label>
               <br />
-              <input id="image" type="file" onChange={editProject} required />
+              <input id="image" type="file" onChange={loadPhoto} required />
             </div>
           </div>
         </div>
@@ -204,6 +189,11 @@ const AddProject = () => {
         ) : (
           <>
             <Modal.Header>Message</Modal.Header>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
+            <br></br>
             <Modal.Content>
               <Modal.Description>{message}</Modal.Description>
             </Modal.Content>

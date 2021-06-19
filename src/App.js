@@ -5,6 +5,9 @@ import logo from "./images/logo.svg";
 import DashBord from "./DashBord";
 
 const App = () => {
+  const BASEURI = "https://jp-backoffice.herokuapp.com/api/projects/";
+  const CLOUDINARYURI =
+    "https://api.cloudinary.com/v1_1/doxk0udlk/image/upload";
   return (
     <>
       <div className="header">
@@ -41,8 +44,20 @@ const App = () => {
           </ul>
         </div>
         <div className="components-container">
-          <Route exact path="/" component={DashBord} />
-          <Route exact path="/addProject" component={AddProject} />
+          <Route
+            exact
+            path="/"
+            component={() => (
+              <DashBord BASEURI={BASEURI} CLOUDINARYURI={CLOUDINARYURI} />
+            )}
+          />
+          <Route
+            exact
+            path="/addProject"
+            component={() => (
+              <AddProject BASEURI={BASEURI} CLOUDINARYURI={CLOUDINARYURI} />
+            )}
+          />
         </div>
       </div>
     </>

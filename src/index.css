@@ -80,6 +80,7 @@ body {
   width: calc(100% - 300px);
   margin-left: 300px;
   padding-bottom: 100px;
+  border-left: solid 1px #c7c7c752;
 }
 
 .header-message {
@@ -286,10 +287,14 @@ body {
 }
 
 .dash-bord__main-container .dash-bord__header h1 {
+  width: calc(100% - 40px);
   padding: 6px;
   font-weight: 700;
   text-align: center;
   color: #2185d0;
+}
+.dash-bord__main-container .dash-bord__header h1 span {
+  color: #db2828;
 }
 
 .dash-bord__main-container .dash-bord__grid {

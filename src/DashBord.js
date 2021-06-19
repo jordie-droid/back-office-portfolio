@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import logo from "./images/logo.svg";
 
 const DashBord = () => {
   const databaseURL = "https://jp-backoffice.herokuapp.com/api/projects/";
-  // const databaseURL = "http://localhost:4000/api/projects";
 
   const [projectsArray, setProjectsArray] = useState([]);
 
@@ -23,8 +21,8 @@ const DashBord = () => {
     <div className="dash-bord__main-container">
       <div className="dash-bord__header">
         <h1>
-          Liste de projets{" "}
-          <span>{projectsArray.length > 0 && projectsArray.length}</span>
+          <span>{projectsArray.length > 0 && projectsArray.length}</span>{" "}
+          {projectsArray.length > 1 ? "projets réalisés" : "project réalisé"}
         </h1>
       </div>
       <div className="dash-bord__grid">
